@@ -1,4 +1,4 @@
-# Maintainer: 
+# Maintainer:
 # Contributor: Mark Wagie <mark dot wagie at tutanota dot com>
 # Contributor: twilinx <twilinx@mesecons.net>
 # Contributor: Jan Alexander Steffens (heftig) <heftig@archlinux.org>
@@ -28,7 +28,7 @@ source=("git+https://gitlab.gnome.org/GNOME/gtk.git#commit=$_commit"
         typeahead.patch)
 sha256sums=('SKIP'
             'a0319b6795410f06d38de1e8695a9bf9636ff2169f40701671580e60a108e229'
-            '3b94b53ee720e24e999e6fe40de269ec5b6ddfcbab64fb1a14e7d89256651607')
+            '5c55038a26fbb23d504853265356c5df9794fbd344985a899bfc550de666ad87')
 
 pkgver() {
   cd gtk
@@ -39,7 +39,8 @@ prepare() {
   cd gtk
 
   # Typeahead-specific changes
-  patch gtk/gtkfilechooserwidget.c -i $srcdir/typeahead.patch
+  git apply $srcdir/typeahead.patch
+
 }
 
 build() {

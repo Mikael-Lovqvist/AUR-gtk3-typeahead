@@ -1,4 +1,45 @@
-@@ -1390,6 +1390,12 @@
+diff --git a/gtk/gtkfilechooserwidget.c b/gtk/gtkfilechooserwidget.c
+index 6a29f3fcf8..8933493cc2 100644
+--- a/gtk/gtkfilechooserwidget.c
++++ b/gtk/gtkfilechooserwidget.c
+@@ -119,7 +119,7 @@
+ #ifdef PROFILE_FILE_CHOOSER
+ 
+ 
+-#ifndef F_OK 
++#ifndef F_OK
+ #define F_OK 0
+ #endif
+ 
+@@ -602,7 +602,7 @@ static GSList  *get_selected_infos           (GtkFileChooserWidget *impl);
+ static void     search_setup_widgets         (GtkFileChooserWidget *impl);
+ static void     search_stop_searching        (GtkFileChooserWidget *impl,
+                                               gboolean               remove_query);
+-static void     search_clear_model           (GtkFileChooserWidget *impl, 
++static void     search_clear_model           (GtkFileChooserWidget *impl,
+                                               gboolean               remove_from_treeview);
+ static void     search_entry_activate_cb     (GtkFileChooserWidget *impl);
+ static void     search_entry_stop_cb         (GtkFileChooserWidget *impl);
+@@ -806,8 +806,8 @@ error_creating_folder_dialog (GtkFileChooserWidget *impl,
+                               GFile                 *file,
+                               GError                *error)
+ {
+-  error_dialog (impl, 
+-                _("The folder could not be created"), 
++  error_dialog (impl,
++                _("The folder could not be created"),
+                 error);
+ }
+ 
+@@ -1356,6 +1356,7 @@ browse_files_key_press_event_cb (GtkWidget   *widget,
+ 
+   if (should_trigger_location_entry (impl, event) &&
+       (priv->action == GTK_FILE_CHOOSER_ACTION_OPEN ||
++       priv->action == GTK_FILE_CHOOSER_ACTION_SAVE ||
+        priv->action == GTK_FILE_CHOOSER_ACTION_SELECT_FOLDER))
+     {
+       location_popup_handler (impl, event->string);
+@@ -1414,6 +1415,12 @@ gtk_file_chooser_widget_key_press_event (GtkWidget   *widget,
    GtkFileChooserWidget *impl = (GtkFileChooserWidget *) widget;
    GtkFileChooserWidgetPrivate *priv = impl->priv;
  
@@ -11,7 +52,7 @@
    if (should_trigger_location_entry (impl, event))
      {
        if (priv->action == GTK_FILE_CHOOSER_ACTION_OPEN ||
-@@ -1399,12 +1405,6 @@
+@@ -1423,12 +1430,6 @@ gtk_file_chooser_widget_key_press_event (GtkWidget   *widget,
            return TRUE;
          }
      }
@@ -24,7 +65,7 @@
  
    if (GTK_WIDGET_CLASS (gtk_file_chooser_widget_parent_class)->key_press_event (widget, event))
      return TRUE;
-@@ -2427,7 +2427,7 @@
+@@ -2493,7 +2494,7 @@ file_list_set_sort_column_ids (GtkFileChooserWidget *impl)
  {
    GtkFileChooserWidgetPrivate *priv = impl->priv;
  
@@ -33,7 +74,7 @@
  
    gtk_tree_view_column_set_sort_column_id (priv->list_name_column, MODEL_COL_NAME);
    gtk_tree_view_column_set_sort_column_id (priv->list_time_column, MODEL_COL_TIME);
-@@ -4338,6 +4338,7 @@
+@@ -4449,6 +4450,7 @@ load_set_model (GtkFileChooserWidget *impl)
    gtk_tree_view_set_model (GTK_TREE_VIEW (priv->browse_files_tree_view),
                             GTK_TREE_MODEL (priv->browse_files_model));
    update_columns (impl, FALSE, _("Modified"));
@@ -41,7 +82,7 @@
    file_list_set_sort_column_ids (impl);
    set_sort_column (impl);
    profile_msg ("    gtk_tree_view_set_model end", NULL);
-@@ -7098,10 +7099,6 @@
+@@ -7345,10 +7347,6 @@ search_engine_hits_added_cb (GtkSearchEngine      *engine,
  {
    GList *l, *files, *files_with_info, *infos;
    GFile *file;
@@ -52,7 +93,7 @@
  
    files = NULL;
    files_with_info = NULL;
-@@ -7129,8 +7126,6 @@
+@@ -7376,8 +7374,6 @@ search_engine_hits_added_cb (GtkSearchEngine      *engine,
    g_list_free_full (infos, g_object_unref);
  
    gtk_stack_set_visible_child_name (GTK_STACK (impl->priv->browse_files_stack), "list");
@@ -61,7 +102,7 @@
  }
  
  /* Callback used from GtkSearchEngine when the query is done running */
-@@ -7427,6 +7422,7 @@
+@@ -7676,6 +7672,7 @@ recent_setup_model (GtkFileChooserWidget *impl)
    gtk_tree_sortable_set_sort_column_id (GTK_TREE_SORTABLE (priv->recent_model),
                                          GTK_TREE_SORTABLE_DEFAULT_SORT_COLUMN_ID,
                                          GTK_SORT_DESCENDING);
@@ -69,7 +110,7 @@
  }
  
  typedef struct
-@@ -7444,7 +7440,7 @@
+@@ -7693,7 +7690,7 @@ recent_idle_cleanup (gpointer data)
  
    gtk_tree_view_set_model (GTK_TREE_VIEW (priv->browse_files_tree_view),
                             GTK_TREE_MODEL (priv->recent_model));
